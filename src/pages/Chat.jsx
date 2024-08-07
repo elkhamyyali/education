@@ -1,196 +1,234 @@
 import React, { useState } from "react";
-import { FaPaperPlane, FaPaperclip, FaTrashAlt, FaEdit } from "react-icons/fa"; // Import additional icons
+
+// Dummy data for dynamic content
+const initialMessages = [
+  {
+    id: 1,
+    sender: "Sylvester Stallone",
+    content: "Hi everyone! Glad you could join! I am making a new movie.",
+    timestamp: "12:45 pm",
+    color: "#DDECF2",
+  },
+  {
+    id: 2,
+    sender: "Tom Cruise",
+    content: "Hi all! I have one question for the movie",
+    timestamp: "12:45 pm",
+    color: "#FCF4CB",
+  },
+  {
+    id: 3,
+    sender: "Harrison Ford",
+    content: "Again?",
+    timestamp: "12:45 pm",
+    color: "#F2F2F2",
+  },
+];
 
 const Chat = () => {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      name: "Shanay Cruz",
-      avatar: "https://pagedone.io/asset/uploads/1710412177.png",
-      messages: [
-        {
-          id: 1,
-          text: "Guts, I need a review of work. Are you ready?",
-          time: "05:14 PM",
-        },
-        { id: 2, text: "Let me know", time: "05:14 PM" },
-      ],
-    },
-    {
-      id: 2,
-      name: "You",
-      avatar: "https://pagedone.io/asset/uploads/1704091591.png",
-      messages: [
-        {
-          id: 3,
-          text: "Yes, let’s see, send your work here",
-          time: "05:14 PM",
-          sentByUser: true,
-        },
-        {
-          id: 4,
-          text: "Anyone on for lunch today",
-          time: "05:14 PM",
-          sentByUser: true,
-        },
-      ],
-    },
-  ]);
-
+  const [messages, setMessages] = useState(initialMessages);
   const [newMessage, setNewMessage] = useState("");
-  const [editingMessage, setEditingMessage] = useState(null);
-  const [updatedText, setUpdatedText] = useState("");
 
   const handleSendMessage = () => {
-    if (newMessage.trim() === "") return;
-
-    setMessages((prevMessages) => [
-      ...prevMessages.map((user) => {
-        if (user.name === "You") {
-          return {
-            ...user,
-            messages: [
-              ...user.messages,
-              {
-                id: Date.now(),
-                text: newMessage,
-                time: new Date().toLocaleTimeString(),
-                sentByUser: true,
-              },
-            ],
-          };
-        }
-        return user;
-      }),
-    ]);
-
-    setNewMessage("");
-  };
-
-  const handleDeleteMessage = (messageId) => {
-    setMessages((prevMessages) => [
-      ...prevMessages.map((user) => ({
-        ...user,
-        messages: user.messages.filter((message) => message.id !== messageId),
-      })),
-    ]);
-  };
-
-  const handleEditMessage = (message) => {
-    setEditingMessage(message.id);
-    setUpdatedText(message.text);
-  };
-
-  const handleUpdateMessage = (messageId) => {
-    setMessages((prevMessages) => [
-      ...prevMessages.map((user) => ({
-        ...user,
-        messages: user.messages.map((message) =>
-          message.id === messageId ? { ...message, text: updatedText } : message
-        ),
-      })),
-    ]);
-
-    setEditingMessage(null);
-    setUpdatedText("");
+    if (newMessage.trim()) {
+      setMessages([
+        ...messages,
+        {
+          id: messages.length + 1,
+          sender: "You",
+          content: newMessage,
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          color: "#D1F7C4", // A different color for new messages
+        },
+      ]);
+      setNewMessage("");
+    }
   };
 
   return (
-    <div className="w-full p-4 md:p-6 lg:p-7 flex flex-col h-screen">
-      <div className="flex-grow overflow-y-auto">
-        {messages.map((user) => (
-          <div key={user.id} className="pb-8 md:pb-11">
-            <div className="flex flex-col gap-4 md:gap-6">
-              {user.messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex items-start ${
-                    message.sentByUser ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  {!message.sentByUser && (
-                    <img
-                      src={user.avatar}
-                      alt={`${user.name} avatar`}
-                      className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover mr-2"
-                    />
-                  )}
-                  <div
-                    className={`flex flex-col gap-1 ${
-                      message.sentByUser ? "items-end" : "items-start"
-                    } ${message.sentByUser ? "text-right" : ""}`}
-                  >
-                    <div
-                      className={`inline-block px-3 py-2 rounded-md ${
-                        message.sentByUser
-                          ? "bg-indigo-600 text-white"
-                          : "bg-gray-100 text-gray-900"
-                      }`}
-                    >
-                      <p className="text-sm">{message.text}</p>
-                    </div>
-                    <div
-                      className={`text-xs text-gray-500 ${
-                        message.sentByUser ? "text-right" : ""
-                      }`}
-                    >
-                      {message.time}
-                    </div>
-                    {message.sentByUser && (
-                      <div className="flex gap-2 mt-1">
-                        <button
-                          onClick={() => handleEditMessage(message)}
-                          className="text-yellow-500"
-                        >
-                          <FaEdit size={14} />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteMessage(message.id)}
-                          className="text-red-500"
-                        >
-                          <FaTrashAlt size={14} />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  {message.sentByUser && (
-                    <img
-                      src={user.avatar}
-                      alt={`${user.name} avatar`}
-                      className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover ml-2"
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
+    <div className="flex flex-col lg:flex-row h-screen">
+      {/* Left Sidebar */}
+      <div className="lg:w-1/3 w-full border-r border-gray-200 flex flex-col lg:min-w-[250px] bg-white lg:bg-gray-50">
+        {/* Header */}
+        <div className="py-2 px-3 bg-gray-200 flex justify-between items-center">
+          <img
+            className="w-10 h-10 rounded-full"
+            alt="User"
+            src="https://fastly.picsum.photos/id/2/200/200.jpg?hmac=isSWZUpv7D1D156XcADPOCZlfCG9mmvb8OlXFdvLdK0"
+          />
+          <div className="flex space-x-4">
+            <button aria-label="More options">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width={24}
+                height={24}
+                fill="#727A7E"
+              >
+                <path d="M12 20.664a9.163 9.163 0 0 1-6.521-2.702.977.977 0 0 1 1.381-1.381 7.269 7.269 0 0 0 10.024.244.977.977 0 0 1 1.313 1.445A9.192 9.192 0 0 1 12 20.664zm7.965-6.112a.977.977 0 0 1-.944-1.229 7.26 7.26 0 0 0-4.8-8.804.977.977 0 0 1 .594-1.86 9.212 9.212 0 0 1 6.092 11.169.976.976 0 0 1-.942.724zm-16.025-.39a.977.977 0 0 1-.953-.769 9.21 9.21 0 0 1 6.626-10.86.975.975 0 1 1 .52 1.882l-.015.004a7.259 7.259 0 0 0-5.223 8.558.978.978 0 0 1-.955 1.185z" />
+              </svg>
+            </button>
+            <button aria-label="Chat settings">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width={24}
+                height={24}
+                fill="#263238"
+              >
+                <path
+                  opacity=".55"
+                  d="M19.005 3.175H4.674C3.642 3.175 3 3.789 3 4.821V21.02l3.544-3.514h12.461c1.033 0 2.064-1.06 2.064-2.093V4.821c-.001-1.032-1.032-1.646-2.064-1.646zm-4.989 9.869H7.041V11.1h6.975v1.944zm3-4H7.041V7.1h9.975v1.944z"
+                />
+              </svg>
+            </button>
+            <button aria-label="More options">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width={24}
+                height={24}
+                fill="#263238"
+              >
+                <path d="M7 12.5c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zm3 0c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zm3 0c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zm4-6.5h-10c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z" />
+              </svg>
+            </button>
           </div>
-        ))}
-      </div>
-      <div className="fixed bottom-0 left-0 w-full p-3 border-t border-gray-200 bg-white flex items-center gap-2">
-        <div className="flex items-center gap-2 flex-grow">
-          <FaPaperclip className="text-gray-500 cursor-pointer" size={22} />
+        </div>
+        {/* Search */}
+        <div className="py-2 px-2 bg-gray-100">
           <input
-            value={editingMessage ? updatedText : newMessage}
-            onChange={(e) =>
-              editingMessage
-                ? setUpdatedText(e.target.value)
-                : setNewMessage(e.target.value)
-            }
-            className="flex-1 bg-gray-100 text-black text-xs font-medium rounded-lg px-3 py-2 focus:outline-none"
-            placeholder="Type here..."
+            type="text"
+            className="w-full px-3 py-2 text-sm rounded border border-gray-300"
+            placeholder="Search or start new chat"
           />
         </div>
-        <button
-          onClick={
-            editingMessage
-              ? () => handleUpdateMessage(editingMessage)
-              : handleSendMessage
-          }
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-1"
-        >
-          <FaPaperPlane size={18} />
-          {editingMessage ? "Update" : "Send"}
-        </button>
+        {/* Contacts */}
+        <div className="flex-1 overflow-auto bg-gray-50">
+          {[
+            "Expendables 4",
+            "Arnold Schwarzenegger",
+            "Russell Crowe",
+            "Tom Cruise",
+            "Harrison Ford",
+          ].map((contact, index) => (
+            <div
+              key={index}
+              className="flex items-center px-3 py-2 hover:bg-gray-200 cursor-pointer border-b border-gray-200"
+            >
+              <img
+                alt={contact}
+                className="h-12 w-12 rounded-full"
+                src={`https://randomuser.me/api/portraits/men/${index + 1}.jpg`}
+              />
+              <div className="ml-4 flex-1">
+                <p className="text-gray-800">{contact}</p>
+                <p className="text-xs text-gray-600">12:45 pm</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Right Chat Area */}
+      <div className="lg:w-2/3 w-full flex flex-col">
+        {/* Header */}
+        <div className="py-2 px-3 bg-gray-100 flex justify-between items-center border-b border-gray-200">
+          <div className="flex items-center">
+            <img
+              className="w-10 h-10 rounded-full"
+              src="https://darrenjameseeley.files.wordpress.com/2014/09/expendables3.jpeg"
+              alt=""
+            />
+            <div className="ml-4">
+              <p className="text-gray-800">New Movie! Expendables 4</p>
+              <p className="text-gray-600 text-xs mt-1">
+                Andrés, Tom, Harrison, Arnold, Sylvester
+              </p>
+            </div>
+          </div>
+          <div className="flex space-x-4">
+            <button aria-label="Search">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width={24}
+                height={24}
+                fill="#263238"
+              >
+                <path d="M15.9 14.3H15l-.3-.3c1-1.1 1.6-2.7 1.6-4.3 0-3.7-3-6.7-6.7-6.7S3 6 3 9.7s3 6.7 6.7 6.7c1.6 0 3.2-.6 4.3-1.6l.3.3v.9l4 4v-4l-4-4zm-7.1 0c-3.1 0-5.7-2.5-5.7-5.7s2.5-5.7 5.7-5.7 5.7 2.5 5.7 5.7-2.5 5.7-5.7 5.7z" />
+              </svg>
+            </button>
+            <button aria-label="Options">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width={24}
+                height={24}
+                fill="#263238"
+              >
+                <path d="M7 12.5c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zm3 0c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zm3 0c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zm4-6.5h-10c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        {/* Chat Messages */}
+        <div className="flex-1 overflow-auto p-3 bg-gray-50">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex items-start mb-4 ${
+                message.sender === "You" ? "justify-end" : "justify-start"
+              }`}
+            >
+              {message.sender !== "You" && (
+                <img
+                  className="w-10 h-10 rounded-full"
+                  src={`https://randomuser.me/api/portraits/men/${message.id}.jpg`}
+                  alt={message.sender}
+                />
+              )}
+              <div
+                className={`p-3 rounded-lg ${
+                  message.sender === "You"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200"
+                } max-w-xs`}
+                style={{ backgroundColor: message.color }}
+              >
+                <p className="text-sm">{message.content}</p>
+                <p className="text-xs text-gray-500">{message.timestamp}</p>
+              </div>
+              {message.sender === "You" && (
+                <img
+                  className="w-10 h-10 rounded-full"
+                  src="https://randomuser.me/api/portraits/men/1.jpg"
+                  alt="You"
+                />
+              )}
+            </div>
+          ))}
+        </div>
+        {/* Message Input */}
+        <div className="border-t border-gray-200 p-3 bg-gray-100">
+          <div className="flex items-center">
+            <input
+              type="text"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              className="flex-1 px-3 py-2 text-sm rounded border border-gray-300"
+              placeholder="Type your message here..."
+            />
+            <button
+              onClick={handleSendMessage}
+              className="ml-2 px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Send
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
