@@ -15,6 +15,7 @@ import {
   AiOutlineEdit,
   AiOutlineDelete,
 } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 const TutorCard = () => {
   return (
@@ -75,10 +76,12 @@ const TutorCard = () => {
                 <AiOutlineBook className="mr-1" />
                 Book Free Trial
               </button>
-              <button className="bg-gray-200 text-gray-700 px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transform hover:scale-105 transition-transform duration-300 flex items-center justify-center">
-                <AiOutlineMessage className="mr-1" />
-                Message
-              </button>
+              <Link to="chat">
+                <button className="bg-gray-200 text-gray-700 px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transform hover:scale-105 transition-transform duration-300 flex items-center justify-center">
+                  <AiOutlineMessage className="mr-1" />
+                  Message
+                </button>
+              </Link>
               <button className="bg-yellow-500 text-white px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transform hover:scale-105 transition-transform duration-300 flex items-center justify-center">
                 <AiOutlineEdit className="mr-1" />
                 Edit
