@@ -1,6 +1,6 @@
 import React, { useState } from "react"
-import LogoImg from "../assets/images/logo-black.png"
-import { LinkData } from "../assets/data/dummydata"
+import LogoImg from "../assets/images/UNI_LOGO-removebg-preview.png";
+import { LinkData } from "../assets/data/dummydata";
 import { Link, NavLink } from "react-router-dom";
 import { BiShoppingBag } from "react-icons/bi";
 import { HiOutlineMenuAlt1, HiViewGrid } from "react-icons/hi";
@@ -12,7 +12,7 @@ export const Header = () => {
       <header className="bg-white py-4 text-black sticky z-50 shadow-md top-0 left-0 w-full">
         <div className="container flex justify-between items-center">
           <div className="logo flex items-center gap-6">
-            <img src={LogoImg} alt="logo" className="h-5" />
+            <img src={LogoImg} alt="logo" className="h-16 w-24" />
             <div className="category flex items-center text-sm gap-3">
               <HiViewGrid size={20} />
               <span>category</span>
@@ -35,7 +35,7 @@ export const Header = () => {
             </ul>
           </nav>
           <div className="account flex items-center gap-5">
-            <Link to="/checkout">
+            <Link to="">
               <button>
                 <BiShoppingBag size={25} />
               </button>
